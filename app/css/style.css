@@ -1,0 +1,31 @@
+.CodeMirror {
+    height: 100%;
+}
+
+.label-others {
+    background-color: rgba(118, 42, 218, 0.55);
+}
+
+.ctrl-unit-led {
+    font-size: 18px;
+}
+
+.pc-style span {
+    background: #5bc0de !important;
+    color: #ffffff !important;
+}
+
+.mar-style span {
+    background: #f0ad4e !important;
+    color: #ffffff !important;
+}
+
+.pc-style.mar-style span {
+    background: #5cb85c !important;
+    color: #ffffff !important;
+}
+
+.terminal {
+    background-color: #272822 !important;
+    color: #5cb85c;
+}

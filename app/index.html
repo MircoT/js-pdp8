@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags always come first -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+    
+    <!-- Tether CSS -->
+    <link rel="stylesheet" href="bower_components/tether/dist/css/tether.min.css">
+    <link rel="stylesheet" href="bower_components/tether/dist/css/tether-theme-basic.min.css">
+    
+    <!-- CodeMirror CSS -->
+    <link rel="stylesheet" href="bower_components/codemirror/lib/codemirror.css">
+    <link rel="stylesheet" href="bower_components/codemirror/theme/mdn-like.css">
+    
+    <!-- My Style -->
+    <link rel="stylesheet" href="css/style.css">
+
+  </head>
+  <body>
+    <hr>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2">
+                <a class="navbar-brand" href="#">JS-PDP8</a>
+            </div>
+            <div class="col col-md-offset-4">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <button class="btn btn-primary-outline" id="btn_compile">Compile</span></button>
+                    <button class="btn btn-primary-outline" id="btn_reset">Reset</span></button>
+                    <button class="btn btn-primary-outline" id="btn_start">Start</span></button>
+                    <button class="btn btn-primary-outline" id="btn_run">Run</span></button>
+                    <button class="btn btn-primary-outline" id="btn_step">Step</span></button>
+                    <button class="btn btn-primary-outline" id="btn_next">Next</span></button>
+                    <button class="btn btn-primary-outline" id="btn_stop">Stop</span></button>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-md-4">
+                <h5>Source</h5>
+                <div id="codeMirrorEditor"></div>
+            </div>
+            <div class="col-md-4">
+                <h5>Ram</h5>
+                <div id="codeMirrorViewer"></div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h5>Registers</h5>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h6><span class="label label-info" id="PC">000000000000</span> PC</h6>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h6><span class="label label-warning" id="MAR">000000000000</span> MAR</h6>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h6><span class="label label-others" id="MBR">0000000000000000</span> MBR</h6>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h6><span class="label label-primary" id="E">0</span>-<span class="label label-primary" id="AC">0000000000000000</span> E-AC</h6>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h6><span class="label label-primary" id="AC_INT">0</span> AC (int compl. 2)</h6>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h6><span class="label label-primary" id="AC_HEX">0</span> AC (hex)</h6>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h6><span class="label label-others" id="OPR">000</span> OPR</h6>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h6><span class="label label-others" id="I">0</span> I</h6>
+                    </div>
+                </div>
+                <div class="row">
+                    <hr>
+                    <div class="col-sm-6">
+                        <h5>Control unit</h5>
+                    </div>
+                    <div class="col-sm-6">
+                        <h5>Status</h5>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h6><span class="label label-danger ctrl-unit-led" id="S">S</span></h6>
+                    </div>
+                    <div class="col-sm-6">
+                        <h6>Clock <span class="label label-others ctrl-unit-led" id="clock">0</span></h6>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h6>F <span class="label label-primary" id="F">0</span></h6>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h6>R <span class="label label-primary" id="R">0</span></h6>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h6><span class="label label-success ctrl-unit-led" id="INT">INT</span></h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-sm-6">
+                <h3>Source errors</h3>
+                <ul id="source_errors" class="list-group">
+                </ul>
+            </div>
+            <div class="col-sm-6">
+                <h3>Terminal</h3>
+                <textarea class="form-control terminal" id="terminal" rows="5" readonly></textarea>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+    
+
+    <!-- jQuery first, then tether and Bootstrap JS. -->
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/tether/dist/js/tether.min.js"></script>
+    <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    
+    <!-- CodeMirror -->
+    <script src="bower_components/codemirror/lib/codemirror.js"></script>
+    <script src="js/pdp8_lang.js"></script>
+    
+    <!-- Main App -->
+    <script src="node_modules/js-pdp8/pdp8.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>

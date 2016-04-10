@@ -1,0 +1,23 @@
+{
+  "name": "js-pdp8",
+  "version": "1.0.0",
+  "description": "A pdp8 emulator in javascript",
+  "main": "main.js",
+  "dependencies": {
+    "bootstrap": "^4.0.0-alpha.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "MircoT",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MircoT/js-pdp8.git"
+  },
+  "bugs": {
+    "url": "https://github.com/MircoT/js-pdp8/issues"
+  },
+  "homepage": "https://github.com/MircoT/js-pdp8"
+}

@@ -1,0 +1,23 @@
+{
+  "name": "js-pdp8",
+  "description": "A pdp8 emulator App in Javascript",
+  "main": "index.html",
+  "authors": [
+    "MircoT <mirco.theone@gmail.com>"
+  ],
+  "license": "MIT",
+  "moduleType": [],
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "codemirror": "^5.13.2",
+    "tether": "^1.2.0",
+    "jquery": "^2.2.2"
+  }
+}

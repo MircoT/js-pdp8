@@ -1,7 +1,7 @@
 # js-pdp8
 An emulator of PDP 8 (simplified) written in Javascript.
 
-## pypdp8 reference
+## Reference
 
 ### Instruction set
 
@@ -80,7 +80,7 @@ Bit 5 - 16 = operation to execute.
   * Operation Code (OPR) 3 bit
   * S, F ed R da 1 bit (Control unit)
 
-#### Pseudo instruction for the compiler
+#### Pseudo instructions for the compiler
 
   * ORG N = Start the code from the N location (N is an hex number).
   * END = end of the program.

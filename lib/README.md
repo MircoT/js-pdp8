@@ -22,16 +22,17 @@ npm run-script test_and_cover
 
 Here is an example of how to use it in nodejs:
 ```javascript
-var PDP8 = require('pdp8');
+var PDP8 = require('./pdp8');
 
 var vm = new PDP8();
 
-vm.compile(`ORG 100
-LDA X
-STA Y
-HLT
-X, DEC 10
-Y, DEC 0`);
+vm.compile(`ORG 100\n
+LDA X\n
+STA Y\n
+HLT\n
+X, DEC 10\n
+Y, DEC 0\n
+END`);
 
 vm.start();
 

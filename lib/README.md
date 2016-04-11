@@ -31,7 +31,7 @@ LDA X
 STA Y
 HLT
 X, DEC 10
-Y, DEC 0`
+Y, DEC 0`);
 
 vm.start();
 

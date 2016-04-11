@@ -9,22 +9,20 @@
 
     const CMEditor = CodeMirror(document.getElementById('codeMirrorEditor'), {
         value: `ORG 100
+
 LDA X
-ADD Y
-STA OUT
-BUN T
-X, DEC 32767
-Y, DEC 1
-OUT, DEC 0
-T, CLA
-CLE
-LDA X2
-ADD Y2
-STA OUT2
+BSA CHK
+INC
 HLT
-X2, DEC -32768
-Y2, DEC -1
-OUT2, DEC 0
+X, AND Y
+Y, HEX 200
+CHK, DEC 0
+CIR
+SNA
+BUN CHK I
+ADD X
+BUN CHK I
+
 END`,/*`ORG 400
 LDA 409
 CMA
@@ -83,18 +81,64 @@ END`,*/ //"/* test comment\nmultiline*/\n//comment on line\nORG 100\nLDA X\nBSA 
         }
     }
   
-    CMEditor.on('change', function(cm) {
+    CMEditor.on('change', (cm) => {
         let errors = pdp8.compile(cm.getDoc().getValue());
-        CMViewer.setOption('firstLineNumber', pdp8.start_add);
+        CMViewer.setOption('firstLineNumber', pdp8.status.start_add);
         printErrors(errors);
         cleanLineStyles();
-        pdp8.reset();
         updateStatus();
-    })
+    });
+    
+    const cleanPopover = () => {
+        $(".selected").first().popover('hide');
+        CMViewer.doc.eachLine((lineHdlr) => {
+            CMViewer.removeLineClass(lineHdlr, 'text', 'selected');
+        });
+        CMEditor.doc.eachLine((lineHdlr) => {
+            CMEditor.removeLineClass(lineHdlr, 'text', 'selected-source');
+        });
+    }
+    
+    const addPopover = () => {
+        let obj = CMViewer.lineInfo(CMViewer.getCursor().line);
+        console.log(obj)
+        $(".selected").first().popover('hide');
+        CMViewer.doc.eachLine((lineHdlr) => {
+            CMViewer.removeLineClass(lineHdlr, 'text', 'selected');
+        });
+        CMEditor.doc.eachLine((lineHdlr) => {
+            CMEditor.removeLineClass(lineHdlr, 'text', 'selected-source');
+        });
+        CMViewer.addLineClass(obj.line, 'text', 'selected');
+        CMEditor.addLineClass(pdp8.getSourceLine(+line_formatter(obj.line)) - 1, 'text', 'selected-source');
+        let data = pdp8.explain(obj.text);
+        $(".selected").first()
+            .attr("data-toggle", "popover")
+            .attr("data-trigger", "manual")
+            .attr("data-html", "true")
+            .attr("data-placement", "bottom")
+            .attr("data-offset", "0 69")
+            .attr("data-content", data.content.replace(/\n/g, "<br>"))
+            .attr("title", data.title);
+        $(function () {
+            $('[data-toggle="popover"]').popover()
+        })
+        $(document).on("click", ".popover", cleanPopover);
+        $(document).on("focusout", ".popover", cleanPopover);
+        $(".selected").first().popover('show');
+    }
+    
+    CMViewer.on('touchstart', (cm, evt) => {
+        setTimeout(addPopover, 0);
+    });
+    
+    CMViewer.on('mousedown', (cm, evt) => {
+        setTimeout(addPopover, 0);
+    });
   
     /*CMEditor.on('focus', function(cm) {
         let errors = pdp8.compile(cm.getDoc().getValue());
-        CMViewer.setOption('firstLineNumber', pdp8.start_add);
+        CMViewer.setOption('firstLineNumber', pdp8.status.start_add);
         CMViewer.getDoc().setValue(pdp8.getRam());
         printErrors(errors);
     })*/
@@ -103,25 +147,27 @@ END`,*/ //"/* test comment\nmultiline*/\n//comment on line\nORG 100\nLDA X\nBSA 
         CMEditor.doc.eachLine((lineHdlr) => {
             CMEditor.removeLineClass(lineHdlr, 'text', 'pc-style');
             CMEditor.removeLineClass(lineHdlr, 'text', 'mar-style');
+            CMEditor.removeLineClass(lineHdlr, 'wrap', 'cur-cmd');
         });
         
         CMViewer.doc.eachLine((lineHdlr) => {
             CMViewer.removeLineClass(lineHdlr, 'text', 'pc-style');
             CMViewer.removeLineClass(lineHdlr, 'text', 'mar-style');
+            CMViewer.removeLineClass(lineHdlr, 'wrap', 'cur-cmd');
         });
     }
   
     let updateStatus = () => {
         let registers = pdp8.getRegisters();
-        let ctrlUnit = pdp8.getCtrlUnit();
         let codeRef = pdp8.getCodeRef();
         CMViewer.getDoc().setValue(pdp8.getRam());
         
         // ----- SCREEN -----
         $("#terminal").text(pdp8.IO.screen);
         
-        // ----- CLOCK -----
-        $("#clock").text(pdp8.clock);
+        // ----- STATUS -----
+        $("#clock").text(pdp8.status.clock);
+        $("#cycle").text(pdp8.status.cycle);
 
         // ----- REGISTERS -----
         $("#PC").text(registers.PC);
@@ -135,7 +181,7 @@ END`,*/ //"/* test comment\nmultiline*/\n//comment on line\nORG 100\nLDA X\nBSA 
         $("#E").text(registers.E);
         
         // ----- CONTROL UNIT -----
-        if (ctrlUnit.S === true) {
+        if (pdp8.ctrlUnit.S === true) {
             $("#S").removeClass("label-danger")
                 .addClass("label-success");
         }
@@ -147,7 +193,7 @@ END`,*/ //"/* test comment\nmultiline*/\n//comment on line\nORG 100\nLDA X\nBSA 
             running = false;
             $("#btn_run").blur();
         }
-        if (ctrlUnit.INT === true) {
+        if (pdp8.ctrlUnit.INT === true) {
             $("#INT").removeClass("label-danger")
                     .addClass("label-success");
         }
@@ -156,20 +202,23 @@ END`,*/ //"/* test comment\nmultiline*/\n//comment on line\nORG 100\nLDA X\nBSA 
                     .addClass("label-danger");
         }
         
-        $("#F").text(ctrlUnit.F);
-        $("#R").text(ctrlUnit.R);
+        $("#F").text(pdp8.ctrlUnit.F);
+        $("#R").text(pdp8.ctrlUnit.R);
         
         // ----- LINE HIGHLIGHT -----
         cleanLineStyles();
         
         let line_num = 1;
-
+        
         CMEditor.doc.eachLine((lineHdlr) => {
             if (line_num === codeRef.PC.source) {
                 CMEditor.addLineClass(lineHdlr, 'text', 'pc-style');
             }
             if (line_num === codeRef.MAR.source) {
                 CMEditor.addLineClass(lineHdlr, 'text', 'mar-style');
+            }
+            if (line_num === codeRef.CUR_CMD.source) {
+                CMEditor.addLineClass(lineHdlr, 'wrap', 'cur-cmd');
             }
             line_num++;
         });
@@ -182,6 +231,9 @@ END`,*/ //"/* test comment\nmultiline*/\n//comment on line\nORG 100\nLDA X\nBSA 
             }
             if (line_num === codeRef.MAR.ram) {
                 CMViewer.addLineClass(lineHdlr, 'text', 'mar-style');
+            }
+            if (line_num === codeRef.CUR_CMD.ram) {
+                CMViewer.addLineClass(lineHdlr, 'wrap', 'cur-cmd');
             }
             line_num++;
         });
@@ -222,10 +274,9 @@ END`,*/ //"/* test comment\nmultiline*/\n//comment on line\nORG 100\nLDA X\nBSA 
         // ----- COMPILE -----
         $("#btn_compile").click(function() {
             let errors = pdp8.compile(CMEditor.getDoc().getValue());
-            CMViewer.setOption('firstLineNumber', pdp8.start_add);
+            CMViewer.setOption('firstLineNumber', pdp8.status.start_add);
             printErrors(errors);
             cleanLineStyles();
-            pdp8.reset();
             updateStatus();
         })
         

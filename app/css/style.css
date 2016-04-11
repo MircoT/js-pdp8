@@ -25,7 +25,20 @@
     color: #ffffff !important;
 }
 
+.cur-cmd pre span span {
+    padding: 2px;
+    box-shadow: 0px 0px 2px 2px #673AB7;
+}
+
 .terminal {
     background-color: #272822 !important;
     color: #5cb85c;
+}
+
+.selected span{
+    font-weight: bold;
+}
+
+.selected-source span{
+    font-weight: bolder;
 }

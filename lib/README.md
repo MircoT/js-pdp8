@@ -43,3 +43,5 @@ while(vm.ctrlUnit.S) {
 console.log(vm.status)
 console.log(vm.getRam())
 ```
+
+You can find more source example [here](https://github.com/MircoT/js-pdp8/tree/master/lib/test/sources).

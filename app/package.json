@@ -1,8 +1,9 @@
 {
   "name": "js-pdp8",
+  "main": "index.html",
+  "js-flags": "--harmony_arrow_functions",
   "version": "1.0.0",
   "description": "A pdp8 emulator in javascript",
-  "main": "main.js",
   "dependencies": {
     "bootstrap": "^4.0.0-alpha.2"
   },

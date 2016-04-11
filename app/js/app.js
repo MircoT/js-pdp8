@@ -1,4 +1,6 @@
 (function() {
+    'use strict';
+
     const line_formatter = (lineNum) => {
         return "0x" + lineNum.toString(16);
     }
@@ -8,45 +10,7 @@
     let func_ref = null;
 
     const CMEditor = CodeMirror(document.getElementById('codeMirrorEditor'), {
-        value: `ORG 100
-
-LDA X
-BSA CHK
-INC
-HLT
-X, AND Y
-Y, HEX 200
-CHK, DEC 0
-CIR
-SNA
-BUN CHK I
-ADD X
-BUN CHK I
-
-END`,/*`ORG 400
-LDA 409
-CMA
-STA 409
-LDA 40A
-STA 40C
-LDA 40B
-STA 40A
-LDA 40C
-STA 40B
-AND FFE I
-9FC6
-00AB
-FFFF
-END`,*/ //"/* test comment\nmultiline*/\n//comment on line\nORG 100\nLDA X\nBSA CHK\nINC\nHLT\nX, AND Y\nY, HEX 200\nCHK, DEC 0\nCIR\nSNA\nBUN CHK I\nADD X\nBUN CHK I\n\nEND",
-//    value: `ORG 100 //PROGRAMMA SCRITTO IN ESADECIMALE
-//7800
-//7020
-//7200
-//1106
-//7200
-//7001
-//0000
-//END`,
+        value: "",
         mode:  "pdp8",
         theme: "mdn-like",
         lineNumbers: true,
@@ -85,6 +49,7 @@ END`,*/ //"/* test comment\nmultiline*/\n//comment on line\nORG 100\nLDA X\nBSA 
         let errors = pdp8.compile(cm.getDoc().getValue());
         CMViewer.setOption('firstLineNumber', pdp8.status.start_add);
         printErrors(errors);
+        cleanPopover();
         cleanLineStyles();
         updateStatus();
     });
@@ -252,30 +217,21 @@ END`,*/ //"/* test comment\nmultiline*/\n//comment on line\nORG 100\nLDA X\nBSA 
     
 
     try {
-        $("#btn_compile").mouseup(function(){
-            $(this).blur();
-        });
-        $("#btn_reset").mouseup(function(){
-            $(this).blur();
-        });
-        $("#btn_step").mouseup(function(){
-            $(this).blur();
-        });
-        $("#btn_next").mouseup(function(){
-            $(this).blur();
-        });
-        $("#btn_start").mouseup(function(){
-            $(this).blur();
-        });
-        $("#btn_stop").mouseup(function(){
-            $(this).blur();
-        });
+        $("#btn_open").mouseup(function(){ $(this).blur(); });
+        $("#btn_save").mouseup(function(){ $(this).blur(); });
+        $("#btn_compile").mouseup(function(){ $(this).blur(); });
+        $("#btn_reset").mouseup(function(){ $(this).blur();});
+        $("#btn_step").mouseup(function(){ $(this).blur(); });
+        $("#btn_next").mouseup(function(){ $(this).blur(); });
+        $("#btn_start").mouseup(function(){ $(this).blur(); });
+        $("#btn_stop").mouseup(function(){ $(this).blur(); });
         
         // ----- COMPILE -----
         $("#btn_compile").click(function() {
             let errors = pdp8.compile(CMEditor.getDoc().getValue());
             CMViewer.setOption('firstLineNumber', pdp8.status.start_add);
             printErrors(errors);
+            cleanPopover();
             cleanLineStyles();
             updateStatus();
         })
@@ -284,6 +240,7 @@ END`,*/ //"/* test comment\nmultiline*/\n//comment on line\nORG 100\nLDA X\nBSA 
         $("#btn_reset").click(function() {
             clearInterval(func_ref);
             running = false;
+            cleanPopover();
             cleanLineStyles();
             pdp8.reset();
             updateStatus();
@@ -337,6 +294,40 @@ END`,*/ //"/* test comment\nmultiline*/\n//comment on line\nORG 100\nLDA X\nBSA 
                 $(this).blur();
             }
         })
+        
+        let openFileWith = (name) => {
+            var chooser = document.querySelector(name);
+            chooser.addEventListener("change", function(evt) {
+                var fReader = new FileReader();
+                fReader.readAsText(chooser.files[0]);
+                fReader.onloadend = function(fs_evt){
+                    CMEditor.doc.setValue(fs_evt.target.result);
+                }
+            }, false);
+            chooser.click();  
+        }
+        
+        openFileWith('#file_open');
+        
+        let saveFile = () => {
+            var textFileAsBlob = new Blob([CMEditor.doc.getValue()], {type:'text/plain'});
+
+            var downloadLink = document.createElement("a");
+            downloadLink.download = "new_file.asm";
+            downloadLink.innerHTML = "Download File";
+            downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
+            // isFF from http://browserhacks.com/
+            if (!!window.sidebar) { 
+                // Firefox requires the link to be added to the DOM before it can be clicked.
+                downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
+                downloadLink.onclick = destroyClickedElement;
+                downloadLink.style.display = "none";
+                document.body.appendChild(downloadLink);
+            }
+            downloadLink.click();
+        }
+        
+        $("#btn_save").click(function () { saveFile(); });
     }
     catch (err) {
         if (err instanceof TypeError) {

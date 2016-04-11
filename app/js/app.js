@@ -10,7 +10,12 @@
     let func_ref = null;
 
     const CMEditor = CodeMirror(document.getElementById('codeMirrorEditor'), {
-        value: "",
+        value: `/* Code example */
+LDA X // Load X in AC
+STA Y // Store AC in Y
+HLT   // STOP VM
+X, DEC -1
+Y, HEX 0`,
         mode:  "pdp8",
         theme: "mdn-like",
         lineNumbers: true,
@@ -66,7 +71,6 @@
     
     const addPopover = () => {
         let obj = CMViewer.lineInfo(CMViewer.getCursor().line);
-        console.log(obj)
         $(".selected").first().popover('hide');
         CMViewer.doc.eachLine((lineHdlr) => {
             CMViewer.removeLineClass(lineHdlr, 'text', 'selected');
@@ -81,8 +85,8 @@
             .attr("data-toggle", "popover")
             .attr("data-trigger", "manual")
             .attr("data-html", "true")
-            .attr("data-placement", "bottom")
-            .attr("data-offset", "0 69")
+            .attr("data-placement", "left")
+            .attr("data-offset", "0 0")
             .attr("data-content", data.content.replace(/\n/g, "<br>"))
             .attr("title", data.title);
         $(function () {

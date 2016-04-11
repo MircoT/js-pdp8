@@ -41,7 +41,7 @@ CodeMirror.defineMode("pdp8", function(_config, parserConfig) {
     },
 
     token: function(stream, state) {
-
+        
       if (stream.eatSpace()) return null;
 
       var w;
@@ -81,7 +81,7 @@ CodeMirror.defineMode("pdp8", function(_config, parserConfig) {
         else if(hex_dec.test(w)) {
           return 'variable-2';
         }
-        else if(numbers.test(w) && stream.next() !== ',') {
+        else if(numbers.test(w) && stream.peek() !== ',') {
           return 'number';
         }
         else if(!indirect.test(w)) {

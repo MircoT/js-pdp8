@@ -1,14 +1,16 @@
 (function() {
     'use strict';
-
+    
+    // Line formatter for VIEWER
     const line_formatter = (lineNum) => {
         return "0x" + lineNum.toString(16);
     }
   
-    const pdp8 = new PDP8();
-    let running = false;
-    let func_ref = null;
-
+    const pdp8 = new PDP8();  // pdp8 object
+    let running = false;  // status running cycle
+    let func_ref = null;  // reference of running cycle function
+    
+    // ----- EDITOR -----
     const CMEditor = CodeMirror(document.getElementById('codeMirrorEditor'), {
         value: `/* Code example */
 LDA X // Load X in AC
@@ -21,6 +23,7 @@ Y, HEX 0`,
         lineNumbers: true,
     });
   
+    // ----- VIEWER -----
     const CMViewer =  CodeMirror(document.getElementById('codeMirrorViewer'), {    
         mode:  "pdp8",
         theme: "mdn-like",
@@ -29,6 +32,7 @@ Y, HEX 0`,
         lineNumberFormatter: line_formatter
     });
   
+    // ----- Print EDITOR errors -----
     const printErrors = (errors) => {
         try {
             $('#source_errors').empty();
@@ -49,7 +53,8 @@ Y, HEX 0`,
             }
         }
     }
-  
+    
+    // ----- EDITOR event change -----
     CMEditor.on('change', (cm) => {
         let errors = pdp8.compile(cm.getDoc().getValue());
         CMViewer.setOption('firstLineNumber', pdp8.status.start_add);
@@ -59,6 +64,7 @@ Y, HEX 0`,
         updateStatus();
     });
     
+    // ----- Remove popover and styles for selected line -----
     const cleanPopover = () => {
         $(".selected").first().popover('hide');
         CMViewer.doc.eachLine((lineHdlr) => {
@@ -69,6 +75,7 @@ Y, HEX 0`,
         });
     }
     
+    // ----- Add popover and selected style -----
     const addPopover = () => {
         let obj = CMViewer.lineInfo(CMViewer.getCursor().line);
         $(".selected").first().popover('hide');
@@ -97,21 +104,17 @@ Y, HEX 0`,
         $(".selected").first().popover('show');
     }
     
+    // ----- VIEWER touch event -----
     CMViewer.on('touchstart', (cm, evt) => {
         setTimeout(addPopover, 0);
     });
     
+    // ----- VIEWER mouse click -----
     CMViewer.on('mousedown', (cm, evt) => {
         setTimeout(addPopover, 0);
     });
-  
-    /*CMEditor.on('focus', function(cm) {
-        let errors = pdp8.compile(cm.getDoc().getValue());
-        CMViewer.setOption('firstLineNumber', pdp8.status.start_add);
-        CMViewer.getDoc().setValue(pdp8.getRam());
-        printErrors(errors);
-    })*/
     
+    // ----- Clean line css for execution -----
     const cleanLineStyles = () => {
         CMEditor.doc.eachLine((lineHdlr) => {
             CMEditor.removeLineClass(lineHdlr, 'text', 'pc-style');
@@ -126,6 +129,7 @@ Y, HEX 0`,
         });
     }
   
+    // ----- Update pdp8 VM status -----
     let updateStatus = () => {
         let registers = pdp8.getRegisters();
         let codeRef = pdp8.getCodeRef();
@@ -137,6 +141,7 @@ Y, HEX 0`,
         // ----- STATUS -----
         $("#clock").text(pdp8.status.clock);
         $("#cycle").text(pdp8.status.cycle);
+        $("#last_istr").text(pdp8.status.last_instr_exec);
 
         // ----- REGISTERS -----
         $("#PC").text(registers.PC);
@@ -219,7 +224,7 @@ Y, HEX 0`,
     }
     
     
-
+    // ----- ACTIONS -----
     try {
         $("#btn_open").mouseup(function(){ $(this).blur(); });
         $("#btn_save").mouseup(function(){ $(this).blur(); });

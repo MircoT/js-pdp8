@@ -2,8 +2,26 @@
     height: 100%;
 }
 
-.label-others {
-    background-color: rgba(118, 42, 218, 0.55);
+.label-mbr {
+    background-color: rgba(118, 42, 218, 0.69);
+}
+
+.label-opr-i {
+    background-color: rgba(0, 179, 107, 0.55);
+}
+
+.label-clock {
+    background-color: rgba(0, 0, 102, 0.55);
+}
+
+.label-fetch {
+    background-color: rgba(51, 153, 255, 0.55);
+}
+
+.label-last-istr {
+    word-wrap: break-word;
+    white-space: normal !important;
+    background-color: rgba(102, 102, 51, 0.55);
 }
 
 .ctrl-unit-led {

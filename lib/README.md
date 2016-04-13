@@ -45,3 +45,13 @@ console.log(vm.getRam())
 ```
 
 You can find more source examples [here](https://github.com/MircoT/js-pdp8/tree/master/lib/test/sources).
+
+### Generate compatible Javascript code
+
+```bash
+babel pdp8.js --presets es2015 --out-file pdp8-compiled.js
+
+# You can compress it like that
+
+uglifyjs pdp8-compiled.js --compress -o pdp8-compiled.min.js
+```

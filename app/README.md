@@ -3,6 +3,7 @@
 ```bash
 bower install
 npm install
+# Link the pdp8 lib
 npm link ../lib
 ```
 

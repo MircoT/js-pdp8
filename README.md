@@ -1,6 +1,12 @@
 # js-pdp8
 An emulator of PDP 8 (simplified) written in Javascript.
 
+## Info
+
+The emulator library is inside the `lib` folder. There you can find the instructions to how to use the emulator inside NodeJS. You can also build a compatible js code to import inside the browser.
+
+An example of *Web App* is in the folder `app`. This application can be launched like a website with e simple static server or with *NW.js*. Check the README file for more details.
+
 ## Reference
 
 ### Instruction set
@@ -15,6 +21,10 @@ Bit 5 - 16 = address.
 
 
 #### Memory reference instructions
+
+**Assembly**: [LABEL], MRI Addr [I]
+
+* Addr can be a LABEL
 
 |1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -33,6 +43,8 @@ Bit 5 - 16 = address of the operand.
   * ISZ = 110 -> Increases by 1 the contents of the cell addressed and if equal to 0, skips the next instruction. The increase by 1 is in place using the MBR register and not E-AC, then you can't check the overflow of this operation.
 
 #### Register reference instructions
+
+**Assembly**: [LABEL], RRI
 
 |1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -55,6 +67,8 @@ Bit 5 - 16 = operation to execute.
   * HLT = 0111 0000 0000 0001 -> Stop the system
 
 #### I/O instructions
+
+**Assembly**: [LABEL], I/O
 
 |1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |

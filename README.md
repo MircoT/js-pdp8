@@ -61,8 +61,8 @@ Bit 5 - 16 = operation to execute.
   * CIL = 0111 0000 0100 0000 -> Left shift of E-AC
   * INC = 0111 0000 0010 0000 -> Increase by 1 the AC content
   * SPA = 0111 0000 0001 0000 -> Jump next instruction if AC > 0
-  * SNA = 0111 0000 0000 1000 -> Jump next instruction if AC = 0
-  * SZA = 0111 0000 0000 0100 -> Jump next instruction if AC < 0
+  * SNA = 0111 0000 0000 1000 -> Jump next instruction if AC < 0
+  * SZA = 0111 0000 0000 0100 -> Jump next instruction if AC = 0
   * SZE = 0111 0000 0000 0010 -> Jump next instruction if E = 0
   * HLT = 0111 0000 0000 0001 -> Stop the system
 
@@ -104,3 +104,19 @@ Bit 5 - 16 = operation to execute.
   * Comment = like in C++ ("// ..." and "/* ... */")
 
 **NOTE**: All addresses are in hexadecimal.
+
+### Execution cycle
+
+There are 4 steps involved for a complete cycle but not all of them are indispensable:
+
+  * FETCH (read of the current instruction)
+  * INDIRECT (resolution of an indirect address)
+  * EXECUTION (execution of the instruction)
+  * INTERRUPT (execution of an interrupt instruction)
+
+Each of these steps has 4 clock cycles to complete (clock starts from 0). All available branches
+of this cycle are these:
+
+  * `FETCH -> EXECUTION`: memory and register instructions
+  * `FETCH -> INDIRECT -> EXECUTION`: only memory instructions
+  * `FETCH -> INTERRUPT`: interrupt instructions

@@ -1,0 +1,14 @@
+ORG 100
+
+BSA X
+LDA X
+ADD Y
+STA X
+BUN X I
+X, ISZ X
+INC
+BUN X I 
+Y, DEC 8
+HLT
+
+END

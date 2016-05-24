@@ -151,6 +151,7 @@
             CMEditor.setOption('readOnly', false);
             running = false;
             $("#btn_run").blur();
+            $("#btn_fast_run").blur();
         }
         if (pdp8.ctrlUnit.INT === true) {
             $("#INT").removeClass("label-danger").addClass("label-success");
@@ -287,6 +288,25 @@
                     if (!running) {
                         func_ref = setInterval(function () {
                             pdp8.step();
+                            updateStatus();
+                        }, 55);
+                        running = true;
+                    } else {
+                        clearInterval(func_ref);
+                        running = false;
+                        $(this).blur();
+                    }
+                } else {
+                    $(this).blur();
+                }
+            });
+
+            // ----- FAST RUN -----
+            $("#btn_fast_run").click(function () {
+                if (pdp8.ctrlUnit.S) {
+                    if (!running) {
+                        func_ref = setInterval(function () {
+                            pdp8.next();
                             updateStatus();
                         }, 55);
                         running = true;

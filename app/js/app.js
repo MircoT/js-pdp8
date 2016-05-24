@@ -235,6 +235,39 @@ Y, HEX 0`,
         $("#btn_next").mouseup(function(){ $(this).blur(); });
         $("#btn_start").mouseup(function(){ $(this).blur(); });
         $("#btn_stop").mouseup(function(){ $(this).blur(); });
+
+        // ----- KEYBOARD -----
+        
+        $( "#pdp8" ).keydown(function(evt) {
+            if (pdp8.ctrlUnit.S) {
+                var cur_char = String.fromCharCode(evt.keyCode).toLowerCase();
+                if (cur_char === "s") {
+                    pdp8.step();
+                    updateStatus();
+                }
+                else if (cur_char === "n") {
+                    pdp8.next();
+                    updateStatus();
+                }
+                else if (cur_char === " ") {  // Space bar
+                    if (!running) {
+                        $("#btn_fast_run").addClass('active')
+                        func_ref = setInterval(() => {
+                            pdp8.next();  
+                            updateStatus();
+                        }, 55);
+                        running = true;
+                    }
+                    else {
+                        clearInterval(func_ref);
+                        running = false;
+                        $("#btn_fast_run").blur();
+                        $("#btn_fast_run").removeClass('active');
+                    }
+                }
+                return false;
+            }
+        });
         
         // ----- COMPILE -----
         $("#btn_compile").click(function() {
@@ -274,8 +307,8 @@ Y, HEX 0`,
         
         // ----- STEP -----
         $("#btn_step").click(function() {
-            pdp8.step();  
-            updateStatus();          
+            pdp8.step();
+            updateStatus();
         })
         
         // ----- NEXT -----
@@ -319,6 +352,7 @@ Y, HEX 0`,
                     clearInterval(func_ref);
                     running = false;
                     $(this).blur();
+                    $(this).removeClass('active');
                 } 
             }
             else {

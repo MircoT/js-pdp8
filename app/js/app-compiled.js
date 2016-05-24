@@ -234,6 +234,37 @@
                 $(this).blur();
             });
 
+            // ----- KEYBOARD -----
+
+            $("#pdp8").keydown(function (evt) {
+                if (pdp8.ctrlUnit.S) {
+                    var cur_char = String.fromCharCode(evt.keyCode).toLowerCase();
+                    if (cur_char === "s") {
+                        pdp8.step();
+                        updateStatus();
+                    } else if (cur_char === "n") {
+                        pdp8.next();
+                        updateStatus();
+                    } else if (cur_char === " ") {
+                        // Space bar
+                        if (!running) {
+                            $("#btn_fast_run").addClass('active');
+                            func_ref = setInterval(function () {
+                                pdp8.next();
+                                updateStatus();
+                            }, 55);
+                            running = true;
+                        } else {
+                            clearInterval(func_ref);
+                            running = false;
+                            $("#btn_fast_run").blur();
+                            $("#btn_fast_run").removeClass('active');
+                        }
+                    }
+                    return false;
+                }
+            });
+
             // ----- COMPILE -----
             $("#btn_compile").click(function () {
                 var errors = pdp8.compile(CMEditor.getDoc().getValue());
@@ -314,6 +345,7 @@
                         clearInterval(func_ref);
                         running = false;
                         $(this).blur();
+                        $(this).removeClass('active');
                     }
                 } else {
                     $(this).blur();

@@ -273,6 +273,7 @@
                 cleanPopover();
                 cleanLineStyles();
                 updateStatus();
+                $("#btn_fast_run").removeClass('active');
             });
 
             // ----- RESET -----
@@ -283,6 +284,7 @@
                 cleanLineStyles();
                 pdp8.reset();
                 updateStatus();
+                $("#btn_fast_run").removeClass('active');
             });
 
             // ----- START -----
@@ -299,6 +301,7 @@
                 CMEditor.setOption('readOnly', false);
                 pdp8.stop();
                 updateStatus();
+                $("#btn_fast_run").removeClass('active');
             });
 
             // ----- STEP -----

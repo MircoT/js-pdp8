@@ -277,6 +277,7 @@ Y, HEX 0`,
             cleanPopover();
             cleanLineStyles();
             updateStatus();
+            $("#btn_fast_run").removeClass('active');
         })
         
         // ----- RESET -----
@@ -287,6 +288,7 @@ Y, HEX 0`,
             cleanLineStyles();
             pdp8.reset();
             updateStatus();
+            $("#btn_fast_run").removeClass('active');
         });
         
         // ----- START -----
@@ -302,7 +304,8 @@ Y, HEX 0`,
             running = false;
             CMEditor.setOption('readOnly', false);
             pdp8.stop();
-            updateStatus();        
+            updateStatus();   
+            $("#btn_fast_run").removeClass('active');     
         })
         
         // ----- STEP -----

@@ -12,7 +12,8 @@ npm link ../lib
 You can use a simple web server to try the app:
 ```bash
 # Start a simple server
-python3 -m http.server
+python3 -m http.server 32000
+python3 -m webbrowser -t "http://localhost:32000"
 ```
 
 The app is compatible with [NW.js](http://nwjs.io/), so you can [download it](http://nwjs.io/downloads/) and run the application from the app folder like this:

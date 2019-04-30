@@ -118,4 +118,5 @@
 .file input {
     min-width: 1rem !important;
     width: 3.46rem;
+    display: none;
 }
